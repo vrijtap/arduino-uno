@@ -15,7 +15,7 @@
 class StateMachine {
 public:
     StateMachine(); // Constructor
-    void handleInputEvent(int event);
+    void handleInputEvent(int SM_event);
 
 private:
     int SM_state;
