@@ -1,5 +1,3 @@
-// StateMachine.h
-
 #ifndef StateMachine_h
 #define StateMachine_h
 

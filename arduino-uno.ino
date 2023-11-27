@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "HighTorqueServo.h"
+#include "StateMachine.h"
 
 #include <stdint.h>
 
