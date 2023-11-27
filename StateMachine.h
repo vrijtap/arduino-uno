@@ -6,13 +6,13 @@
 #include <Arduino.h>
 
 // Define states as constants
-#define IDLE_STATE 0
-#define TAPPING_STATE 1
-#define PAUSED_STATE 2
+#define SM_IDLE_STATE 0
+#define SM_TAPPING_STATE 1
+#define SM_PAUSED_STATE 2
 
 // Define events as constants
-#define ZERO_EVENT 0
-#define ONE_EVENT 1
+#define SM_ZERO 0
+#define SM_ONE 1
 
 class StateMachine {
 public:
