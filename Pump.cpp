@@ -4,24 +4,24 @@
 #include <stdint.h>
 
 // Constructor definition
-Pump::Pump(int relaisPin) : relaisPin(relaisPin) {}
+Pump::Pump(int relayPin) : relayPin(relayPin) {}
 
 // Public function: Initialize the components for the pump
 void Pump::init(void)
 {
     // Initialize the relais
-    pinMode(this->relaisPin, OUTPUT);
+    pinMode(this->relayPin, OUTPUT);
     this->stop();
 }
 
 // Public function: Starts the pump
 void Pump::start(void)
 {
-    digitalWrite(this->relaisPin, LOW);
+    digitalWrite(this->relayPin, LOW);
 }
 
 // Public function: Stops the pump
 void Pump::stop(void)
 {
-    digitalWrite(this->relaisPin, HIGH);
+    digitalWrite(this->relayPin, HIGH);
 }
