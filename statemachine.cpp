@@ -18,8 +18,7 @@ void StateMachine::handleInputEvent(int SM_event) {
       if (SM_event == SM_ONE) {
         this->SM_state = SM_TAPPING_STATE;
         Serial.println("Transitioned from Idle to Tapping");
-      }
-      // Stay in SM_IDLE_STATE if SM_ZERO is received
+        }
       break;
     case SM_TAPPING_STATE:
       if (SM_event == SM_ZERO) {
@@ -36,7 +35,6 @@ void StateMachine::handleInputEvent(int SM_event) {
         Serial.println("Transitioned from Paused to Tapping");
       } 
       break;
-    
     default:
       Serial.println("Invalid SM_state!");
       break;
