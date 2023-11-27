@@ -20,7 +20,7 @@ public:
     void handleInputEvent(int event);
 
 private:
-    int state;
+    int SM_state;
 };
 
 #endif
