@@ -5,6 +5,10 @@ StateMachine::StateMachine() {
   SM_state = SM_IDLE_STATE;
 }
 
+int StateMachine::getState() const {
+    return SM_state; // Return the current state
+}
+
 // Function to handle SM_state transitions
 void StateMachine::handleInputEvent(int SM_event) {
   switch (SM_state) {
