@@ -6,8 +6,8 @@
 class Pump {
 public:
     // Constructor: Initializes the Pump
-    // relaisPin: Pin connected to the relais
-    Pump(int relaisPin);
+    // relayPin: Pin connected to the relais
+    Pump(int relayPin);
 
     // Public function: Initialize the Pump
     void init(void);
@@ -20,7 +20,7 @@ public:
 
 private:
     // Member variable representing relais pin number
-    uint8_t relaisPin;
+    uint8_t relayPin;
 };
 
 #endif // PUMP_H
