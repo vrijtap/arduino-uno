@@ -4,20 +4,20 @@
 #include <stdint.h>
 
 // Constructor: Initializes the HighTorqueServo with specified angle limits and initial percentage turned
-HighTorqueServo::HighTorqueServo(int minAngle, int maxAngle) {
+HighTorqueServo::HighTorqueServo(uint8_t servoPin, int minAngle, int maxAngle) : servoPin(servoPin) {
   this->minMicroseconds = this->angleToMicroseconds(minAngle);
   this->maxMicroseconds = this->angleToMicroseconds(maxAngle);
 }
 
 // Public function: Initialize the servo
-void HighTorqueServo::init(uint8_t servoPin, float percentage) {
+void HighTorqueServo::init(float percentage) {
   // Check if the servo is already attached
   if (this->servo.attached()) {
     this->servo.detach();
   }
 
   // Attach the servo and set it in its starting position
-  this->servo.attach(servoPin);
+  this->servo.attach(this->servoPin);
   this->write(percentage);
 }
 
