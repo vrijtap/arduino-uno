@@ -23,6 +23,16 @@ void setup() {
 }
 
 void loop() {
+
+  if(I2CBuffer == 1){
+      Serial.println("Buffer turned to 1");
+      I2CBuffer = 2; // Idle state
+  }
+  else if(I2CBuffer == 0){
+      Serial.println("Buffer turned to 0");
+      I2CBuffer = 2; // Idle state
+  }
+
   /*
     // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
     cupHolderServo.write(0.0);
@@ -31,7 +41,6 @@ void loop() {
     delay(1000);
   */
    delay(10);
-   I2CBuffer = 6;
 }
 
 // Function to receive data on arrival
