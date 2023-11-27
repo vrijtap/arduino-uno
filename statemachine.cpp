@@ -35,9 +35,10 @@ void StateMachine::handleInputEvent(int SM_event) {
         this->SM_state = SM_TAPPING_STATE;
         Serial.println("Transitioned from Paused to Tapping");
       } 
-      }
       break;
+    
     default:
       Serial.println("Invalid SM_state!");
       break;
-  }
+    }
+}
