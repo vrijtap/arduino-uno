@@ -9,12 +9,12 @@ public:
   // Constructor: Initializes the HighTorqueServo with specified angle limits and initial percentage turned
   // minAngle: Minimum angle limit (accepted range: [0, 180])
   // maxAngle: Maximum angle limit (accepted range: [0, 180])
-  HighTorqueServo(int minAngle, int maxAngle);
+  HighTorqueServo(uint8_t servoPin, int minAngle, int maxAngle);
 
   // Public function: Initialize the High Torque Servo
   // servoPin: Pin number for the servo
   // percentage: Initial percentage turned (accepted range: [0.0, 100.0])
-  void init(uint8_t servoPin, float percentage);
+  void init(float percentage);
 
   // Public function: Turn the servo to a percentage of the defined angle range
   // percentage: Percentage of range to turn the servo towards (accepted range: [0.0, 100.0])
@@ -32,6 +32,9 @@ private:
   // Member variables representing the angle limits and current percentage turned
   int minMicroseconds;
   int maxMicroseconds;
+
+  // Member variables representing the servo
+  uint8_t servoPin;
   Servo servo;
 
   // Private function: Map an angle to a PWM signal duration in microseconds
