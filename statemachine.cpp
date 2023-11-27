@@ -4,11 +4,11 @@
 
 // Constructor
 StateMachine::StateMachine() {
-  SM_state = SM_IDLE_STATE;
+  this->SM_state = SM_IDLE_STATE;
 }
 
 int StateMachine::getState() const {
-    return SM_state; // Return the current state
+    return this->SM_state; // Return the current state
 }
 
 // Function to handle SM_state transitions
@@ -16,23 +16,23 @@ void StateMachine::handleInputEvent(int SM_event) {
   switch (SM_state) {
     case SM_IDLE_STATE:
       if (SM_event == SM_ONE) {
-        SM_state = SM_TAPPING_STATE;
+        this->SM_state = SM_TAPPING_STATE;
         Serial.println("Transitioned from Idle to Tapping");
       }
       // Stay in SM_IDLE_STATE if SM_ZERO is received
       break;
     case SM_TAPPING_STATE:
       if (SM_event == SM_ZERO) {
-        SM_state = SM_PAUSED_STATE;
+        this->SM_state = SM_PAUSED_STATE;
         Serial.println("Transitioned from Tapping to Paused");
       } else if (SM_event == SM_ONE) {
-        SM_state = SM_IDLE_STATE;
+        this->SM_state = SM_IDLE_STATE;
         Serial.println("Transitioned from Tapping to Idle");
       }
       break;
     case SM_PAUSED_STATE:
       if (SM_event == SM_ONE) {
-        SM_state = SM_TAPPING_STATE;
+        this->SM_state = SM_TAPPING_STATE;
         Serial.println("Transitioned from Paused to Tapping");
       } 
       }
