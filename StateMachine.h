@@ -1,3 +1,5 @@
+// Made By: Benjamin Kelada
+
 #ifndef StateMachine_h
 #define StateMachine_h
 
@@ -15,8 +17,9 @@
 class StateMachine {
 public:
     StateMachine(); // Constructor
-    void handleInputEvent(int SM_event);
     int getState() const;
+    void handleInputEvent(int SM_event);
+    
 
 private:
     int SM_state;
