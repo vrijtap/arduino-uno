@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include <Wire.h>
 #include "HighTorqueServo.h"
+#include "Pump.h"
 #include "StateMachine.h"
 
 #include <stdint.h>
@@ -26,7 +27,7 @@ void setup() {
 
   // Initialize the Pump component
   pump.init();
-  cupHolderServo.init(CUP_HOLDER_SERVO_PIN, 0.0);
+  cupHolderServo.init(0.0);
 
   Wire.begin(0x8); // Arduino as a slave, with address 8
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
