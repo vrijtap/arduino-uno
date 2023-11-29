@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "HighTorqueServo.h"
 #include "StateMachine.h"
-
+#include "Pump.h"
 #include <stdint.h>
 
 // Constants for Cup Holder Servo
@@ -19,6 +19,7 @@ const uint8_t PUMP_PIN = 7;
 
 // Create an instance of the Pump
 Pump pump(PUMP_PIN);
+StateMachine sm;
 
 void setup() {
   // Initialize the High Torque Servo component
@@ -26,7 +27,7 @@ void setup() {
 
   // Initialize the Pump component
   pump.init();
-  cupHolderServo.init(CUP_HOLDER_SERVO_PIN, 0.0);
+  // TODO: cupHolderServo.init(CUP_HOLDER_SERVO_PIN, 0.0); // unable to run with this line in code currently
 
   Wire.begin(0x8); // Arduino as a slave, with address 8
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
@@ -35,16 +36,10 @@ void setup() {
 }
 
 void loop() {
+  int state = sm.getState();
 
-  if(I2CBuffer == 1){
-      Serial.println("Buffer turned to 1");
-      I2CBuffer = 2; // Idle state
-  }
-  else if(I2CBuffer == 0){
-      Serial.println("Buffer turned to 0");
-      I2CBuffer = 2; // Idle state
-  }
-
+  if(sm.getState() == true)
+  {
   /*
     // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
     cupHolderServo.write(0.0);
@@ -60,13 +55,18 @@ void loop() {
     pump.stop();
     delay(1000);
   */
-   delay(10);
+    //if process has completed turn state to 2 as a flag t the RPi
+    I2CBuffer = 2;
+    sm.handleInputEvent(1); // returns to the idle state
+  }
+  delay(3000); 
 }
 
 // Function to receive data on arrival
 void receiveData(int byteCount) {
   while (Wire.available()) {
     I2CBuffer = Wire.read();
+    sm.handleInputEvent(I2CBuffer);
   }
 }
 
