@@ -9,8 +9,6 @@
 const uint8_t CUP_HOLDER_SERVO_PIN = 6; // Pin number connected to the Cup Holder Servo
 const int CUP_HOLDER_MIN_ANGLE = 88;    // Minimum angle for the Cup Holder Servo
 const int CUP_HOLDER_MAX_ANGLE = 107;   // Maximum angle for the Cup Holder Servo
-int I2CBuffer = 0;
-
 // Create an instance of the HighTorqueServo class for the Cup Holder that initializes at 0.0 percent of the angle range
 HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_HOLDER_MAX_ANGLE);
 
@@ -38,8 +36,14 @@ void setup() {
 void loop() {
   int state = sm.getState();
 
-  if(sm.getState() == true)
+  // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
+  if(sm.getState() == SM_TAPPING_STATE)
   {
+    //if process has completed turn state to 2 as a flag t the RPi
+    sm.handleInputEvent(SM_ONE); // returns to the idle state
+  }
+  delay(3000);
+
   /*
     // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
     cupHolderServo.write(0.0);
@@ -55,22 +59,18 @@ void loop() {
     pump.stop();
     delay(1000);
   */
-    //if process has completed turn state to 2 as a flag t the RPi
-    I2CBuffer = 2;
-    sm.handleInputEvent(1); // returns to the idle state
-  }
-  delay(3000); 
 }
 
 // Function to receive data on arrival
 void receiveData(int byteCount) {
   while (Wire.available()) {
-    I2CBuffer = Wire.read();
-    sm.handleInputEvent(I2CBuffer);
+    sm.handleInputEvent(Wire.read());
   }
 }
 
 // Function to send data back over I2C 
 void sendData() {
-  Wire.write(I2CBuffer); // Send back the received data
+  if (sm.getState() == SM_IDLE_STATE) {
+    Wire.write(200); // temporary data, scale date here
+  } else Wire.write(sm.getState()); // Send the current state
 }
