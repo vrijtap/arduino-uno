@@ -7,16 +7,17 @@
 class Scale {
   public:
     // Constructor: Initializes the Scale object with specified pins and calibration factor
-    Scale(int doutPin, int sckPin, float factor);
+    Scale(int doutPin, int sckPin);
 
-    // Initialize the scale
     void init();
-
     // Reset the scale to zero
     void reset();
 
-    // Get the weight measurement after averaging 'numOfReadings' readings
-    float getWeight(int numOfReadings);
+    // Get the average weight measurement
+    float getWeight();
+
+    // Get the average weight measurement in percentages from a full tank
+    int getPercentage();
 
   private:
     int doutPin;    // Pin connected to the DOUT (data output) of the HX711

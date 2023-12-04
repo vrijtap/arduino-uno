@@ -3,6 +3,7 @@
 #include "Pump.h"
 #include "StateMachine.h"
 #include "Pump.h"
+#include "Scale.h"
 
 // Standard libraries
 #include "Arduino.h"
@@ -11,16 +12,17 @@
 
 // Create an instance of the HighTorqueServo class for the Cup Holder
 const uint8_t CUP_HOLDER_SERVO_PIN = 6; // Pin number connected to the Cup Holder Servo
+const uint8_t PUMP_PIN = 7;
 const int CUP_HOLDER_MIN_ANGLE = 88;    // Minimum angle for the Cup Holder Servo
 const int CUP_HOLDER_MAX_ANGLE = 107;   // Maximum angle for the Cup Holder Servo
+const int LOADCELL_DOUT_PIN = 2;  
+const int LOADCELL_SCK_PIN = 3;   
+
+// Create an instances of the following classes
 HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_HOLDER_MAX_ANGLE);
-
-// Create an instance of the Pump
-const uint8_t PUMP_PIN = 7;
-Pump pump(PUMP_PIN);
-
-// Create an instance of the state machine
 StateMachine stateMachine;
+Pump pump(PUMP_PIN);
+Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 
 // Function answer requests from the I2C connection
 void sendData() {
@@ -39,6 +41,7 @@ void receiveData(int byteCount) {
 void setup() {
   // Initialize the High Torque Servo component
   cupHolderServo.init(0.0);
+  scale.init();
 
   // Initialize the Pump component
   pump.init();
@@ -53,7 +56,8 @@ void setup() {
 void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
-
+  scale.reset();
+  Serial.println(scale.getWeight());
   /* DEBUG CODE FOR TESTING THE I2C AND STATE MACHINE INTEGRATION
   if(stateMachine.getState() == SM_TAPPING_STATE)
   {

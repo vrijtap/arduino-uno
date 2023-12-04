@@ -1,14 +1,17 @@
 #include "Scale.h"  
 
+const int NUM_READINGS = 10;    // Amount of readings that will take place.
+const float SCALE_FACTOR = -400.6280f;    // Amount of readings that will take place.
+
 // Constructor: Initializes the Scale object with specified pins and calibration factor
-Scale::Scale(int doutPin, int sckPin, float factor)
-  : doutPin(doutPin), sckPin(sckPin), factor(factor) {
+Scale::Scale(int doutPin, int sckPin)
+  : doutPin(doutPin), sckPin(sckPin) {
 }
 
 // Initialize the scale
 void Scale::init() {
   this->hx711.begin(doutPin, sckPin);  // Initialize HX711 with specified pins
-  this->hx711.set_scale(factor);       // Set the calibration factor
+  this->hx711.set_scale(SCALE_FACTOR);       // Set the calibration factor
   reset();                       // Reset the scale to 0
 }
 
@@ -18,6 +21,11 @@ void Scale::reset() {
 }
 
 // Get the weight measurement after averaging 'numOfReadings' readings
-float Scale::getWeight(int numOfReadings) {
-  return this->hx711.get_units(numOfReadings);  // Return the weight measurement
+float Scale::getWeight() {
+  return this->hx711.get_units(NUM_READINGS);  // Return the weight measurement
+}
+
+// Get the weight measurement after averaging 'numOfReadings' readings
+int Scale::getPercentage() {
+  return this->hx711.get_units(NUM_READINGS);  // Return the weight measurement
 }
