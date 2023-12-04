@@ -27,7 +27,7 @@ Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 // Function answer requests from the I2C connection
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(200); // TODO: Replace the placeholder data weight data
+    Wire.write(scale.getPercentage()+ 100 ); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
   } else Wire.write(stateMachine.getState()); // Send the current state
 }
 
