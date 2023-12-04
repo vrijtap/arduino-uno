@@ -28,6 +28,6 @@ float Scale::getWeight() {
 
 // Get the weight measurement after averaging 'numOfReadings' readings
 int Scale::getPercentage() {
-  int percentage = (MAX_WEIGHT / this->getWeight()) * 100;
+  int percentage = this->getWeight() / (MAX_WEIGHT / 100);
   return percentage;  // Return the weight measurement
 }
