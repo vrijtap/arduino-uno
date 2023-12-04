@@ -4,9 +4,9 @@
 #include <Arduino.h>
 #include "HX711.h"
 
-class HX711_Scale {
+class Scale {
   public:
-    HX711_Scale(int doutPin, int sckPin, float factor);
+    Scale(int doutPin, int sckPin, float factor);
     void init();
     void reset();
     float getWeight(int numOfReadings);
@@ -15,7 +15,7 @@ class HX711_Scale {
     int doutPin;
     int sckPin;
     float factor;
-    HX711 scale;
+    HX711 hx711;
 };
 
 #endif
