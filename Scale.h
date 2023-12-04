@@ -1,5 +1,5 @@
-#ifndef HX711_SCALE_H
-#define HX711_SCALE_H
+#ifndef SCALE_H
+#define SCALE_H
 
 #include <Arduino.h>
 #include "HX711.h"
