@@ -40,7 +40,7 @@ void receiveData(int byteCount) {
 
 void setup() {
   // Initialize the High Torque Servo component
-  Serial.begin(9600);
+  Serial.begin(115200);
   cupHolderServo.init(0.0);
   scale.init();
 
