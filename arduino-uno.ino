@@ -57,7 +57,7 @@ void setup() {
 void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
-  Serial.println(scale.getWeight());
+  Serial.println(scale.getPercentage());
   delay(3000);
   /* DEBUG CODE FOR TESTING THE I2C AND STATE MACHINE INTEGRATION
   if(stateMachine.getState() == SM_TAPPING_STATE)
