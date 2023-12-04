@@ -4,13 +4,13 @@ HX711_Scale::HX711_Scale(int doutPin, int sckPin, float factor)
   : doutPin(doutPin), sckPin(sckPin), factor(factor) {
 }
 
-void HX711_Scale::begin() {
-  scale.begin(_doutPin, _sckPin);
-  scale.set_scale(_factor);
-  tare(); // reset the scale to 0
+void HX711_Scale::init() {
+  scale.init(doutPin, sckPin);
+  scale.set_scale(factor);
+  reset(); // reset the scale to 0
 }
 
-void HX711_Scale::tare() {
+void HX711_Scale::reset() {
   scale.tare();
 }
 

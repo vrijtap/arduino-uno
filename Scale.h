@@ -7,8 +7,8 @@
 class HX711_Scale {
   public:
     HX711_Scale(int doutPin, int sckPin, float factor);
-    void begin();
-    void tare();
+    void init();
+    void reset();
     float getWeight(int numOfReadings);
 
   private:
