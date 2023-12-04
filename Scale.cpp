@@ -1,4 +1,4 @@
-#include "HX711_Scale.h"
+#include "Scale.h"
 
 Scale::Scale(int doutPin, int sckPin, float factor)
   : doutPin(doutPin), sckPin(sckPin), factor(factor) {
