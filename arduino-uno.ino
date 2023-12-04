@@ -40,6 +40,7 @@ void receiveData(int byteCount) {
 
 void setup() {
   // Initialize the High Torque Servo component
+  Serial.begin(9600);
   cupHolderServo.init(0.0);
   scale.init();
 
@@ -56,8 +57,8 @@ void setup() {
 void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
-  scale.reset();
   Serial.println(scale.getWeight());
+  delay(3000);
   /* DEBUG CODE FOR TESTING THE I2C AND STATE MACHINE INTEGRATION
   if(stateMachine.getState() == SM_TAPPING_STATE)
   {

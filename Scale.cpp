@@ -1,7 +1,7 @@
 #include "Scale.h"  
 
 const int NUM_READINGS = 10;    // Amount of readings that will take place.
-const float SCALE_FACTOR = -400.6280f;    // Amount of readings that will take place.
+const float SCALE_FACTOR = -400.628078f;    // Amount of readings that will take place.
 
 // Constructor: Initializes the Scale object with specified pins and calibration factor
 Scale::Scale(int doutPin, int sckPin)
