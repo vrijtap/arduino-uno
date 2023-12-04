@@ -1,26 +1,19 @@
-#include <Arduino.h>
-#include "HX711.h"
+#include "Scale.h"
 
-// HX711 circuit wiring
-const int LOADCELL_DOUT_PIN = 2;
-const int LOADCELL_SCK_PIN = 3;
-const float LOADCELL_FACTOR = -400.6280f;
-
-HX711 scale;
-
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Initializing the scale");
-
-  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-  scale.set_scale(LOADCELL_FACTOR);
-  scale.tare();               // reset the scale to 0
+HX711_Scale::HX711_Scale(int doutPin, int sckPin, float factor)
+  : doutPin(doutPin), sckPin(sckPin), factor(factor) {
 }
 
-void loop() {
-  Serial.print("\t| average:\t");
-  Serial.println(scale.get_units(10), 5);   // print the average of 5 readings from the ADC minus tare weight, divided
-                                            // by the SCALE parameter set with set_scale
+void HX711_Scale::begin() {
+  scale.begin(_doutPin, _sckPin);
+  scale.set_scale(_factor);
+  tare(); // reset the scale to 0
+}
 
-  delay(5000);
+void HX711_Scale::tare() {
+  scale.tare();
+}
+
+float HX711_Scale::getWeight(int numOfReadings) {
+  return scale.get_units(numOfReadings);
 }
