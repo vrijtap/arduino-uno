@@ -1,20 +1,21 @@
-// Made By: Benjamin Kelada
-
-#ifndef Scale_h
-#define Scale_h
+#ifndef HX711_SCALE_H
+#define HX711_SCALE_H
 
 #include <Arduino.h>
+#include "HX711.h"
 
+class HX711_Scale {
+  public:
+    HX711_Scale(int doutPin, int sckPin, float factor);
+    void begin();
+    void tare();
+    float getWeight(int numOfReadings);
 
-class Scale {
-public:
-    Scale();
-    int getWeight() const;
-    void handleInput(int Raw_Data);
-    
-
-private:
-    int Scale_data;
+  private:
+    int doutPin;
+    int sckPin;
+    float factor;
+    HX711 scale;
 };
 
 #endif
