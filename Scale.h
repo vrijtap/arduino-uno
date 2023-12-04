@@ -25,4 +25,4 @@ class Scale {
     HX711 hx711;    // Instance of the HX711 library for interfacing with the load cell
 };
 
-#endif 
+#endif //SCALE_H
