@@ -10,7 +10,7 @@ class Scale {
 public:
     Scale();
     int getWeight() const;
-    void handleInputEvent(int Raw_Data);
+    void handleInput(int Raw_Data);
     
 
 private:
