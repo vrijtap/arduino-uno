@@ -64,11 +64,9 @@ void setup() {
 void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
-
-
   if(stateMachine.getState() == SM_TAPPING_STATE)
   {
-    //if process has completed turn state to 2 as a flag t the RPi
+    /* if process has completed turn state to 2 as a flag t the RPi
       // DEBUG CODE FOR TESTING THE PUMP
 
     int start = scale.getWeight();
@@ -83,7 +81,15 @@ void loop() {
     stateMachine.handleInputEvent(SM_ONE); // returns to the idle state
   } 
   delay(3000);
-  
+  */
+
+  /*
+    // DEBUG CODE FOR TESTING THE PUMP
+    pump.start();
+    delay(1000);
+    pump.stop();
+    delay(1000);
+  */
 
   /*
     // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
