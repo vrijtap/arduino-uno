@@ -64,18 +64,17 @@ void setup() {
 void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
-  if(stateMachine.getState() == SM_TAPPING_STATE)
-  {
-    /* if process has completed turn state to 2 as a flag t the RPi
-      // DEBUG CODE FOR TESTING THE PUMP
 
-    int start = scale.getWeight();
-    if(start > 200) {
-      pump.start();
-      while(scale.getWeight() > start - 200 ) {
-        delay(5);
-      }
-      pump.stop();
+  /*
+    // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
+    if(stateMachine.getState() == SM_TAPPING_STATE) {
+      int start = scale.getWeight();
+      if(start > 200) {
+        pump.start();
+        while(scale.getWeight() > start - 200 ) {
+          delay(5);
+        }
+        pump.stop();
     }
 
     stateMachine.handleInputEvent(SM_ONE); // returns to the idle state
