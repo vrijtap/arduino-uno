@@ -10,50 +10,45 @@
 #include <Wire.h>
 #include <stdint.h>
 
-// Create an instance of the HighTorqueServo class for the Cup Holder
-const uint8_t CUP_HOLDER_SERVO_PIN = 6; // Pin number connected to the Cup Holder Servo
-const uint8_t PUMP_PIN = 7;
+// Create the Scale Class
+const int MAX_WEIGHT = 925;
 const int LOADCELL_DOUT_PIN = 2;
 const int LOADCELL_SCK_PIN = 3;
-
-const int CUP_HOLDER_MIN_ANGLE = 88;    // Minimum angle for the Cup Holder Servo
-const int CUP_HOLDER_MAX_ANGLE = 107;   // Maximum angle for the Cup Holder Servo
-
-const int MAX_WEIGHT = 925;    // Full tank weight palceholder.
-
-// Create an instances of the following classes
-HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_HOLDER_MAX_ANGLE);
-Pump pump(PUMP_PIN);
 Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN, MAX_WEIGHT);
 
+// Create the Cup Holder Servo Class
+const uint8_t CUP_HOLDER_SERVO_PIN = 6;
+const int CUP_HOLDER_MIN_ANGLE = 88;
+const int CUP_HOLDER_MAX_ANGLE = 107;
+HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_HOLDER_MAX_ANGLE);
+
+// Create the Arm Holder Servo Class
+const uint8_t ARM_HOLDER_SERVO_PIN = 5;
+const int ARM_HOLDER_MIN_ANGLE = 0;
+const int ARM_HOLDER_MAX_ANGLE = 90;
+HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_HOLDER_MAX_ANGLE);
+
+// Create the Pump Class
+const uint8_t PUMP_PIN = 7;
+Pump pump(PUMP_PIN);
+
+// Create the State Machine
 StateMachine stateMachine;
-
-// Function answer requests from the I2C connection
-void sendData() {
-  if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(scale.getPercentage() + 100 ); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
-  } else Wire.write(stateMachine.getState()); // Send the current state
-}
-
-// Function to receive state switches from the I2C connection
-void receiveData(int byteCount) {
-  while (Wire.available()) {
-    stateMachine.handleInputEvent(Wire.read());
-  }
-}
 
 void setup() {
   // Initialize the Scale
+  Serial.begin(115200);
   scale.init();
   scale.reset();
 
-  // Initialize the High Torque Servo component
-  Serial.begin(115200);
+  // Initialize the Cup Holder Servo
   cupHolderServo.init(0.0);
+
+  // Initialize the Arm Holder Servo
+  armHolderServo.init(0.0);
   
   // Initialize the Pump component
   pump.init();
-  cupHolderServo.init(0.0);
 
   // Configure the I2C connection
   Wire.begin(0x8); // Arduino as a slave, with address 8
@@ -99,8 +94,30 @@ void loop() {
   */
 
   /*
+    // DEBUG CODE FOR TESTING THE ARM HOLDER SERVO
+    armHolderServo.write(0.0);
+    delay(1000);
+    armHolderServo.write(100.0);
+    delay(1000);
+  */
+
+  /*
     // DEBUG CODE FOR TESTING THE SCALE
     Serial.println(scale.getWeight());
     delay(1000);
   */
+}
+
+// Function answer requests from the I2C connection
+void sendData() {
+  if (stateMachine.getState() == SM_IDLE_STATE) {
+    Wire.write(scale.getPercentage() + 100 ); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
+  } else Wire.write(stateMachine.getState()); // Send the current state
+}
+
+// Function to receive state switches from the I2C connection
+void receiveData(int byteCount) {
+  while (Wire.available()) {
+    stateMachine.handleInputEvent(Wire.read());
+  }
 }
