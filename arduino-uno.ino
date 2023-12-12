@@ -98,4 +98,9 @@ void loop() {
     delay(1000);
   */
 
+  /*
+    // DEBUG CODE FOR TESTING THE SCALE
+    Serial.println(scale.getWeight());
+    delay(1000);
+  */
 }
