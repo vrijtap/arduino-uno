@@ -2,17 +2,17 @@
 
 const int NUM_READINGS = 10;    // Amount of readings that will take place.
 const float SCALE_FACTOR = -400.628078f;    // Amount of readings that will take place.
-const int MAX_WEIGHT = 1500;    // Full tank weight palceholder.
 
 // Constructor: Initializes the Scale object with specified pins and calibration factor
-Scale::Scale(int doutPin, int sckPin)
-  : doutPin(doutPin), sckPin(sckPin) {
+Scale::Scale(int doutPin, int sckPin, int max_weight)
+  : doutPin(doutPin), sckPin(sckPin), max_weight(max_weight) {
 }
 
 // Initialize the scale
 void Scale::init() {
   this->hx711.begin(doutPin, sckPin);  // Initialize HX711 with specified pins
   this->hx711.set_scale(SCALE_FACTOR);       // Set the calibration factor
+
   reset();                       // Reset the scale to 0
 }
 
@@ -28,6 +28,6 @@ float Scale::getWeight() {
 
 // Get the weight measurement after averaging 'numOfReadings' readings
 int Scale::getPercentage() {
-  int percentage = this->getWeight() / (MAX_WEIGHT / 100);
+  int percentage = this->getWeight() / (this->max_weight / 100);
   return percentage;  // Return the weight measurement
 }
