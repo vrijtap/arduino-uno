@@ -3,6 +3,7 @@
 #include "Pump.h"
 #include "StateMachine.h"
 #include "Pump.h"
+#include "Scale.h"
 
 // Standard libraries
 #include "Arduino.h"
@@ -11,21 +12,26 @@
 
 // Create an instance of the HighTorqueServo class for the Cup Holder
 const uint8_t CUP_HOLDER_SERVO_PIN = 6; // Pin number connected to the Cup Holder Servo
+const uint8_t PUMP_PIN = 7;
+const int LOADCELL_DOUT_PIN = 2;
+const int LOADCELL_SCK_PIN = 3;
+
 const int CUP_HOLDER_MIN_ANGLE = 88;    // Minimum angle for the Cup Holder Servo
 const int CUP_HOLDER_MAX_ANGLE = 107;   // Maximum angle for the Cup Holder Servo
+
+const int MAX_WEIGHT = 925;    // Full tank weight palceholder.
+
+// Create an instances of the following classes
 HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_HOLDER_MAX_ANGLE);
-
-// Create an instance of the Pump
-const uint8_t PUMP_PIN = 7;
 Pump pump(PUMP_PIN);
+Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN, MAX_WEIGHT);
 
-// Create an instance of the state machine
 StateMachine stateMachine;
 
 // Function answer requests from the I2C connection
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(200); // TODO: Replace the placeholder data weight data
+    Wire.write(scale.getPercentage() + 100 ); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
   } else Wire.write(stateMachine.getState()); // Send the current state
 }
 
@@ -37,9 +43,14 @@ void receiveData(int byteCount) {
 }
 
 void setup() {
-  // Initialize the High Torque Servo component
-  cupHolderServo.init(0.0);
+  // Initialize the Scale
+  scale.init();
+  scale.reset();
 
+  // Initialize the High Torque Servo component
+  Serial.begin(115200);
+  cupHolderServo.init(0.0);
+  
   // Initialize the Pump component
   pump.init();
   cupHolderServo.init(0.0);
@@ -54,14 +65,25 @@ void loop() {
   // Fetch the current state
   int state = stateMachine.getState();
 
-  /* DEBUG CODE FOR TESTING THE I2C AND STATE MACHINE INTEGRATION
+
   if(stateMachine.getState() == SM_TAPPING_STATE)
   {
     //if process has completed turn state to 2 as a flag t the RPi
+      // DEBUG CODE FOR TESTING THE PUMP
+
+    int start = scale.getWeight();
+    if(start > 200) {
+      pump.start();
+      while(scale.getWeight() > start - 200 ) {
+        delay(5);
+      }
+      pump.stop();
+    }
+
     stateMachine.handleInputEvent(SM_ONE); // returns to the idle state
-  }
+  } 
   delay(3000);
-  */
+  
 
   /*
     // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
@@ -71,11 +93,4 @@ void loop() {
     delay(1000);
   */
 
-  /*
-    // DEBUG CODE FOR TESTING THE PUMP
-    pump.start();
-    delay(1000);
-    pump.stop();
-    delay(1000);
-  */
 }
