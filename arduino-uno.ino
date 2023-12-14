@@ -33,15 +33,15 @@ HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_H
 const uint8_t PUMP_PIN = 7;
 Pump pump(PUMP_PIN);
 
-// Define the I2C send/receive functions
-void sendData(void);
-void receiveData(int byteCount);
+// Create a Tapping System
+TappingSystem tappingSystem(&scale, &cupHolderServo, &armHolderServo, &pump);
 
 // Create the State Machine
 StateMachine stateMachine;
 
-// Create a Tapping System
-TappingSystem tappingSystem(&scale, &cupHolderServo, &armHolderServo, &pump);
+// Define the I2C send/receive functions
+void sendData(void);
+void receiveData(int byteCount);
 
 void setup() {
   // Initialize the Scale
