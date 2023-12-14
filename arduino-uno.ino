@@ -4,7 +4,6 @@
 #include "include/StateMachine.h"
 #include "include/Pump.h"
 #include "include/Scale.h"
-#include "TappingSystem.h"
 
 // Standard libraries
 #include "Arduino.h"
@@ -33,11 +32,11 @@ HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_H
 const uint8_t PUMP_PIN = 7;
 Pump pump(PUMP_PIN);
 
-// Create a Tapping System
-TappingSystem tappingSystem(&scale, &cupHolderServo, &armHolderServo, &pump);
-
 // Create the State Machine
 StateMachine stateMachine;
+
+// Define a struct to hold tapping information
+const uint16_t DRINK_VOLUME = 200;
 
 // Define the I2C send/receive functions
 void sendData(void);
@@ -64,51 +63,68 @@ void setup() {
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
 }
 
-#define SM_IDLE_STATE 0   
-#define SM_TAPPING_STATE 1   
-#define SM_PAUSED_STATE 2   
+float startVolume = 0.0;
+bool tapping = false;
 
-bool running = true;
 void loop() {
-  if (running) {
-    int state = stateMachine.getState();
-    switch (state) {
-      // Case to define behaviour when in IDLE mode
-      case SM_IDLE_STATE:
-        break;
+  /*
+  int state = stateMachine.getState();
+  switch (state) {
+    // Case to define behaviour when in IDLE mode
+    case SM_IDLE_STATE:
+      delay(16);
+      break;
 
-      // Case to define behaviour when in TAPPING mode
-      case SM_TAPPING_STATE:
-        break;
+    // Case to define behaviour when in TAPPING mode
+    case SM_TAPPING_STATE:
+      float volume = scale.getWeight();
+
+      // Check if the tap started
+      if(startVolume == 0.0 && volume > DRINK_VOLUME) {
+        startVolume = volume;
+        pump.start();
+        tapping = true;
+      } else if(startVolume - volume > DRINK_VOLUME) {
+        startVolume = 0.0;
+        pump.stop();
+        tapping = false;
+        stateMachine.handleInputEvent(SM_ONE);
+      }
+
+      // End of the case 
+      delay(16);
+      break;
     
-      // Case to define behaviour when in PAUSED mode
-      case SM_PAUSED_STATE:
-        break;
+    // Case to define behaviour when in PAUSED mode
+    case SM_PAUSED_STATE:
+      delay(16);
+      break;
     
-      // Case that should stay unreachable
-      default:
-        Serial.println("Error: Invalid State Received");
-        running = false;
-    }
+    // Case that should stay unreachable
+    default:
+      Serial.println("Error: Invalid State Received");
   }
+  */
 
-  // Fetch the current state
-  // int state = stateMachine.getState();
+  /*
+    // Fetch the current state
+    int state = stateMachine.getState();
 
-  //   // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
-  //   if(stateMachine.getState() == SM_TAPPING_STATE) {
-  //     int start = scale.getWeight();
-  //     if(start > 200) {
-  //       pump.start();
-  //       while(scale.getWeight() > start - 200 ) {
-  //         delay(5);
-  //       }
-  //       pump.stop();
-  //      }
-  //   }
+    // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
+    if(stateMachine.getState() == SM_TAPPING_STATE) {
+      int start = scale.getWeight();
+      if(start > 200) {
+        pump.start();
+        while(scale.getWeight() > start - 200 ) {
+          delay(5);
+        }
+        pump.stop();
+      }
+    }
 
-  //   stateMachine.handleInputEvent(SM_ONE); // returns to the idle state 
-  // delay(3000);
+    stateMachine.handleInputEvent(SM_ONE); // returns to the idle state 
+    delay(3000);
+  */
 
   /*
     // DEBUG CODE FOR TESTING THE PUMP
@@ -136,7 +152,7 @@ void loop() {
 
   /*
     // DEBUG CODE FOR TESTING THE SCALE
-    Serial.println(scale.getWeight());
+    Serial.println(scale.getPercentage());
     delay(1000);
   */
 }
@@ -144,7 +160,7 @@ void loop() {
 // Function answer requests from the I2C connection
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(scale.getPercentage() + 100 ); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
+    Wire.write(scale.getPercentage() + 100); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
   } else Wire.write(stateMachine.getState()); // Send the current state
 }
 
