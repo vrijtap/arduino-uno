@@ -15,6 +15,7 @@ const int MAX_WEIGHT = 925;
 const int LOADCELL_DOUT_PIN = 2;
 const int LOADCELL_SCK_PIN = 3;
 Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN, MAX_WEIGHT);
+int weightpercentage = 0;
 
 // Create the Cup Holder Servo Class
 const uint8_t CUP_HOLDER_SERVO_PIN = 6;
@@ -67,7 +68,6 @@ float startVolume = 0.0;
 bool tapping = false;
 
 void loop() {
-  /*
   int state = stateMachine.getState();
   switch (state) {
     // Case to define behaviour when in IDLE mode
@@ -81,14 +81,19 @@ void loop() {
 
       // Check if the tap started
       if(startVolume == 0.0 && volume > DRINK_VOLUME) {
+        // Start tapping
         startVolume = volume;
         pump.start();
         tapping = true;
       } else if(startVolume - volume > DRINK_VOLUME) {
+        // Stop tapping
         startVolume = 0.0;
         pump.stop();
         tapping = false;
+        
+        // Switch back to IDLE and wait for 5 seconds
         stateMachine.handleInputEvent(SM_ONE);
+        delay(5000);
       }
 
       // End of the case 
@@ -104,7 +109,7 @@ void loop() {
     default:
       Serial.println("Error: Invalid State Received");
   }
-  */
+  weightpercentage = scale.getPercentage();
 
   /*
     // Fetch the current state
@@ -160,8 +165,8 @@ void loop() {
 // Function answer requests from the I2C connection
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(scale.getPercentage() + 100); // Sends back percentage of the tank, added 100 so it does not conflict with I2C commands.
-  } else Wire.write(stateMachine.getState()); // Send the current state
+    Wire.write(weightpercentage);
+  } else Wire.write(stateMachine.getState());
 }
 
 // Function to receive state switches from the I2C connection
