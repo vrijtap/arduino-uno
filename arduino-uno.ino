@@ -25,12 +25,16 @@ HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_H
 // Create the Arm Holder Servo Class
 const uint8_t ARM_HOLDER_SERVO_PIN = 5;
 const int ARM_HOLDER_MIN_ANGLE = 0;
-const int ARM_HOLDER_MAX_ANGLE = 90;
+const int ARM_HOLDER_MAX_ANGLE = 60;
 HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_HOLDER_MAX_ANGLE);
 
 // Create the Pump Class
 const uint8_t PUMP_PIN = 7;
 Pump pump(PUMP_PIN);
+
+// Define the I2C send/receive functions
+void sendData(void);
+void receiveData(int byteCount);
 
 // Create the State Machine
 StateMachine stateMachine;
@@ -42,7 +46,7 @@ void setup() {
   scale.reset();
 
   // Initialize the Cup Holder Servo
-  cupHolderServo.init(0.0);
+  cupHolderServo.init(100.0);
 
   // Initialize the Arm Holder Servo
   armHolderServo.init(0.0);
@@ -58,24 +62,22 @@ void setup() {
 
 void loop() {
   // Fetch the current state
-  int state = stateMachine.getState();
+  // int state = stateMachine.getState();
 
-  /*
-    // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
-    if(stateMachine.getState() == SM_TAPPING_STATE) {
-      int start = scale.getWeight();
-      if(start > 200) {
-        pump.start();
-        while(scale.getWeight() > start - 200 ) {
-          delay(5);
-        }
-        pump.stop();
-    }
+  //   // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
+  //   if(stateMachine.getState() == SM_TAPPING_STATE) {
+  //     int start = scale.getWeight();
+  //     if(start > 200) {
+  //       pump.start();
+  //       while(scale.getWeight() > start - 200 ) {
+  //         delay(5);
+  //       }
+  //       pump.stop();
+  //      }
+  //   }
 
-    stateMachine.handleInputEvent(SM_ONE); // returns to the idle state
-  } 
-  delay(3000);
-  */
+  //   stateMachine.handleInputEvent(SM_ONE); // returns to the idle state 
+  // delay(3000);
 
   /*
     // DEBUG CODE FOR TESTING THE PUMP
@@ -96,9 +98,9 @@ void loop() {
   /*
     // DEBUG CODE FOR TESTING THE ARM HOLDER SERVO
     armHolderServo.write(0.0);
-    delay(1000);
+    delay(5000);
     armHolderServo.write(100.0);
-    delay(1000);
+    delay(5000);
   */
 
   /*
