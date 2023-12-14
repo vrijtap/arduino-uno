@@ -1,8 +1,8 @@
 #ifndef SCALE_H  
 #define SCALE_H
 
-#include <Arduino.h>  
-#include "HX711.h"    
+#include <Arduino.h>
+#include "HX711.h"
 
 class Scale {
   public:
@@ -17,7 +17,7 @@ class Scale {
     float getWeight();
 
     // Get the average weight measurement in percentages from a full tank
-    int getPercentage();
+    int weightToPercentage(float weight);
 
   private:
     int doutPin;    // Pin connected to the DOUT (data output) of the HX711

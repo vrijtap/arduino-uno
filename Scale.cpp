@@ -1,4 +1,4 @@
-#include "Scale.h"  
+#include "include/Scale.h"  
 
 const int NUM_READINGS = 10;    // Amount of readings that will take place.
 const float SCALE_FACTOR = -400.628078f;    // Amount of readings that will take place.
@@ -27,7 +27,7 @@ float Scale::getWeight() {
 }
 
 // Get the weight measurement after averaging 'numOfReadings' readings
-int Scale::getPercentage() {
-  int percentage = this->getWeight() / (this->max_weight / 100);
+int Scale::weightToPercentage(float weight) {
+  int percentage = weight / (this->max_weight / 100);
   return percentage;  // Return the weight measurement
 }

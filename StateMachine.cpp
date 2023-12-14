@@ -1,5 +1,5 @@
 // Made By: Benjamin Kelada
-#include "StateMachine.h"
+#include "include/StateMachine.h"
 
 // Constructor for the state machine
 StateMachine::StateMachine() {
