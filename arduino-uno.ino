@@ -4,6 +4,7 @@
 #include "include/StateMachine.h"
 #include "include/Pump.h"
 #include "include/Scale.h"
+#include "TappingSystem.h"
 
 // Standard libraries
 #include "Arduino.h"
@@ -38,6 +39,9 @@ void receiveData(int byteCount);
 
 // Create the State Machine
 StateMachine stateMachine;
+
+// Create a Tapping System
+TappingSystem tappingSystem(&scale, &cupHolderServo, &armHolderServo, &pump);
 
 void setup() {
   // Initialize the Scale
