@@ -1,8 +1,8 @@
 #ifndef SCALE_H  
 #define SCALE_H
 
-#include <Arduino.h>  
-#include "HX711.h"    
+#include <Arduino.h>
+#include "HX711.h"
 
 class Scale {
   public:

@@ -1,9 +1,9 @@
 // Project Classes
-#include "HighTorqueServo.h"
-#include "Pump.h"
-#include "StateMachine.h"
-#include "Pump.h"
-#include "Scale.h"
+#include "include/HighTorqueServo.h"
+#include "include/Pump.h"
+#include "include/StateMachine.h"
+#include "include/Pump.h"
+#include "include/Scale.h"
 
 // Standard libraries
 #include "Arduino.h"
@@ -46,7 +46,7 @@ void setup() {
   scale.reset();
 
   // Initialize the Cup Holder Servo
-  cupHolderServo.init(100.0);
+  cupHolderServo.init(0.0);
 
   // Initialize the Arm Holder Servo
   armHolderServo.init(0.0);
@@ -60,7 +60,34 @@ void setup() {
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
 }
 
+#define SM_IDLE_STATE 0   
+#define SM_TAPPING_STATE 1   
+#define SM_PAUSED_STATE 2   
+
+bool running = true;
 void loop() {
+  if (running) {
+    int state = stateMachine.getState();
+    switch (state) {
+      // Case to define behaviour when in IDLE mode
+      case SM_IDLE_STATE:
+        break;
+
+      // Case to define behaviour when in TAPPING mode
+      case SM_TAPPING_STATE:
+        break;
+    
+      // Case to define behaviour when in PAUSED mode
+      case SM_PAUSED_STATE:
+        break;
+    
+      // Case that should stay unreachable
+      default:
+        Serial.println("Error: Invalid State Received");
+        running = false;
+    }
+  }
+
   // Fetch the current state
   // int state = stateMachine.getState();
 

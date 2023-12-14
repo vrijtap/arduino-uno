@@ -1,4 +1,4 @@
-#include "Scale.h"  
+#include "include/Scale.h"  
 
 const int NUM_READINGS = 10;    // Amount of readings that will take place.
 const float SCALE_FACTOR = -400.628078f;    // Amount of readings that will take place.

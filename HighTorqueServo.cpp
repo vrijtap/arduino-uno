@@ -1,4 +1,4 @@
-#include "HighTorqueServo.h"
+#include "include/HighTorqueServo.h"
 
 #include <Arduino.h>
 #include <stdint.h>
