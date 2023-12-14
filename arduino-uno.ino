@@ -15,7 +15,6 @@ const int MAX_WEIGHT = 925;
 const int LOADCELL_DOUT_PIN = 2;
 const int LOADCELL_SCK_PIN = 3;
 Scale scale(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN, MAX_WEIGHT);
-int weightpercentage = 0;
 
 // Create the Cup Holder Servo Class
 const uint8_t CUP_HOLDER_SERVO_PIN = 6;
@@ -40,6 +39,7 @@ StateMachine stateMachine;
 const uint16_t DRINK_VOLUME = 200;
 
 // Define the I2C send/receive functions
+int weightpercentage = 0;
 void sendData(void);
 void receiveData(int byteCount);
 
@@ -68,6 +68,10 @@ float startVolume = 0.0;
 bool tapping = false;
 
 void loop() {
+  float volume = scale.getWeight();
+  weightpercentage = scale.weightToPercentage(volume);
+
+  // Switch case for the state machine states
   int state = stateMachine.getState();
   switch (state) {
     // Case to define behaviour when in IDLE mode
@@ -77,14 +81,12 @@ void loop() {
 
     // Case to define behaviour when in TAPPING mode
     case SM_TAPPING_STATE:
-      float volume = scale.getWeight();
-
-      // Check if the tap started
       if(startVolume == 0.0 && volume > DRINK_VOLUME) {
         // Start tapping
         startVolume = volume;
         pump.start();
         tapping = true;
+
       } else if(startVolume - volume > DRINK_VOLUME) {
         // Stop tapping
         startVolume = 0.0;
@@ -93,8 +95,11 @@ void loop() {
         
         // Switch back to IDLE and wait for 5 seconds
         stateMachine.handleInputEvent(SM_ONE);
-        delay(5000);
       }
+
+      /*
+        SPACE FOR CONTROLLING THE SERVO'S
+      */
 
       // End of the case 
       delay(16);
@@ -102,6 +107,10 @@ void loop() {
     
     // Case to define behaviour when in PAUSED mode
     case SM_PAUSED_STATE:
+      /*
+        CODE FOR PAUSING THE MACHINE
+      */
+
       delay(16);
       break;
     
@@ -109,27 +118,6 @@ void loop() {
     default:
       Serial.println("Error: Invalid State Received");
   }
-  weightpercentage = scale.getPercentage();
-
-  /*
-    // Fetch the current state
-    int state = stateMachine.getState();
-
-    // DEBUG CODE FOR TESTING THE STATE MACHINE & I2C CONNECTION
-    if(stateMachine.getState() == SM_TAPPING_STATE) {
-      int start = scale.getWeight();
-      if(start > 200) {
-        pump.start();
-        while(scale.getWeight() > start - 200 ) {
-          delay(5);
-        }
-        pump.stop();
-      }
-    }
-
-    stateMachine.handleInputEvent(SM_ONE); // returns to the idle state 
-    delay(3000);
-  */
 
   /*
     // DEBUG CODE FOR TESTING THE PUMP
@@ -165,7 +153,7 @@ void loop() {
 // Function answer requests from the I2C connection
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
-    Wire.write(weightpercentage);
+    Wire.write(weightpercentage + 100);
   } else Wire.write(stateMachine.getState());
 }
 
