@@ -96,25 +96,45 @@ void loop() {
         for(float angle = INITIAL_ANGLE; angle < startAngle; angle += 5.0) {
           cupHolderServo.write(angle);
           armHolderServo.write(angle);
-          delay(28);
+          delay(32);
         }
         pump.start();
 
         // Manage control boolean
         tapping = true;
       } else if(startVolume - volume > DRINK_VOLUME) {
-        // Stop tapping
-        startVolume = 0.0;
+        // Manage stopping the pump
         pump.stop();
+        float stopWeight = scale.getWeight();
+        while(true) {
+          float currentWeight = scale.getWeight();
+          if(currentWeight >= stopWeight) {
+            break;
+          } else {
+            stopWeight = currentWeight;
+          }
+        }
+
+        // Set Servo's to INITIAL_ANGLE
+        delay(1000);
+        cupHolderServo.write(INITIAL_ANGLE);
+        armHolderServo.write(INITIAL_ANGLE);
+
+        // Manage control variables
+        startVolume = 0.0;
         tapping = false;
         
         // Switch back to IDLE and wait for 5 seconds
         stateMachine.handleInputEvent(SM_ONE);
       }
 
-      /*
-        SPACE FOR CONTROLLING THE SERVO'S
-      */
+      // Manage the Servo's while tapping
+      if(tapping) {
+        float angle = getServoAngle(volume);
+        cupHolderServo.write(angle);
+        armHolderServo.write(angle * 0.35 + 65.0);
+        delay(32);
+      }
 
       // End of the case 
       delay(16);
