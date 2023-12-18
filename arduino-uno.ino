@@ -66,8 +66,6 @@ void setup() {
   Wire.begin(0x8); // Arduino as a slave, with address 8
   Wire.onRequest(sendData); // Register a callback for outgoing I2C data
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
-
-  stateMachine.handleInputEvent(SM_ONE);
 }
 
 float startVolume = 0.0;
@@ -142,11 +140,11 @@ void loop() {
     
     // Case to define behaviour when in PAUSED mode
     case SM_PAUSED_STATE:
-      /*
-        CODE FOR PAUSING THE MACHINE
-      */
-
-      delay(16);
+      pump.stop();
+      while(stateMachine.getState() == SM_PAUSED_STATE) {
+        delay(16);
+      }
+      pump.start();
       break;
     
     // Case that should stay unreachable
