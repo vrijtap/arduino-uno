@@ -124,6 +124,8 @@ void loop() {
         
         // Switch back to IDLE and wait for 5 seconds
         stateMachine.handleInputEvent(SM_ONE);
+      } else if(startVolume == 0.0) {
+        stateMachine.handleInputEvent(SM_ONE);
       }
 
       // Manage the Servo's while tapping
