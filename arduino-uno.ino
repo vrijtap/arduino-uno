@@ -27,6 +27,7 @@ const uint8_t ARM_HOLDER_SERVO_PIN = 5;
 const int ARM_HOLDER_MIN_ANGLE = 0;
 const int ARM_HOLDER_MAX_ANGLE = 70;
 HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_HOLDER_MAX_ANGLE);
+const float INITIAL_ANGLE = 0.0;
 
 // Create the Pump Class
 const uint8_t PUMP_PIN = 7;
@@ -50,10 +51,10 @@ void setup() {
   scale.reset();
 
   // Initialize the Cup Holder Servo
-  cupHolderServo.init(0.0);
+  cupHolderServo.init(INITIAL_ANGLE);
 
   // Initialize the Arm Holder Servo
-  armHolderServo.init(0.0);
+  armHolderServo.init(INITIAL_ANGLE);
 
   // Function to calculate the Servo angle
   float getServoAngle(float volume);
@@ -92,8 +93,11 @@ void loop() {
         float startAngle = getServoAngle(volume);
 
         // Manage hardware
-        cupHolderServo.write(startAngle);
-        armHolderServo.write(startAngle);
+        for(float angle = INITIAL_ANGLE; angle < startAngle; angle += 5.0) {
+          cupHolderServo.write(angle);
+          armHolderServo.write(angle);
+          delay(28);
+        }
         pump.start();
 
         // Manage control boolean
