@@ -25,7 +25,7 @@ HighTorqueServo cupHolderServo(CUP_HOLDER_SERVO_PIN, CUP_HOLDER_MIN_ANGLE, CUP_H
 // Create the Arm Holder Servo Class
 const uint8_t ARM_HOLDER_SERVO_PIN = 5;
 const int ARM_HOLDER_MIN_ANGLE = 0;
-const int ARM_HOLDER_MAX_ANGLE = 60;
+const int ARM_HOLDER_MAX_ANGLE = 70;
 HighTorqueServo armHolderServo(ARM_HOLDER_SERVO_PIN, ARM_HOLDER_MIN_ANGLE, ARM_HOLDER_MAX_ANGLE);
 
 // Create the Pump Class
@@ -54,6 +54,9 @@ void setup() {
 
   // Initialize the Arm Holder Servo
   armHolderServo.init(0.0);
+
+  // Function to calculate the Servo angle
+  float getServoAngle(float volume);
   
   // Initialize the Pump component
   pump.init();
@@ -62,6 +65,8 @@ void setup() {
   Wire.begin(0x8); // Arduino as a slave, with address 8
   Wire.onRequest(sendData); // Register a callback for outgoing I2C data
   Wire.onReceive(receiveData); // Register a callback for incoming I2C data
+
+  stateMachine.handleInputEvent(SM_ONE);
 }
 
 float startVolume = 0.0;
@@ -82,11 +87,17 @@ void loop() {
     // Case to define behaviour when in TAPPING mode
     case SM_TAPPING_STATE:
       if(startVolume == 0.0 && volume > DRINK_VOLUME) {
-        // Start tapping
+        // Start values for the hardware
         startVolume = volume;
-        pump.start();
-        tapping = true;
+        float startAngle = getServoAngle(volume);
 
+        // Manage hardware
+        cupHolderServo.write(startAngle);
+        armHolderServo.write(startAngle);
+        pump.start();
+
+        // Manage control boolean
+        tapping = true;
       } else if(startVolume - volume > DRINK_VOLUME) {
         // Stop tapping
         startVolume = 0.0;
@@ -161,5 +172,25 @@ void sendData() {
 void receiveData(int byteCount) {
   while (Wire.available()) {
     stateMachine.handleInputEvent(Wire.read());
+  }
+}
+
+// Function to calculate the servo angle
+float getServoAngle(float volume) {
+  if(volume < 0.0) {
+    return 0.0;
+  }
+
+  // Calculate how much we have already tapped
+  float percentageTapped = (startVolume - volume) / DRINK_VOLUME;
+  float inversePercentage = (1 - percentageTapped) * 100.0;
+
+  // Error check and manage the output
+  if(inversePercentage < 0.0) {
+    return 0.0;
+  } else if(inversePercentage > 100.0) {
+    return 100.0;
+  } else {
+    return inversePercentage;
   }
 }
