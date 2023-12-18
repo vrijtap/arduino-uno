@@ -153,36 +153,6 @@ void loop() {
     default:
       Serial.println("Error: Invalid State Received");
   }
-
-  /*
-    // DEBUG CODE FOR TESTING THE PUMP
-    pump.start();
-    delay(1000);
-    pump.stop();
-    delay(1000);
-  */
-
-  /*
-    // DEBUG CODE FOR TESTING THE CUP HOLDER SERVO
-    cupHolderServo.write(0.0);
-    delay(1000);
-    cupHolderServo.write(100.0);
-    delay(1000);
-  */
-
-  /*
-    // DEBUG CODE FOR TESTING THE ARM HOLDER SERVO
-    armHolderServo.write(0.0);
-    delay(5000);
-    armHolderServo.write(100.0);
-    delay(5000);
-  */
-
-  /*
-    // DEBUG CODE FOR TESTING THE SCALE
-    Serial.println(scale.getPercentage());
-    delay(1000);
-  */
 }
 
 // Function answer requests from the I2C connection
