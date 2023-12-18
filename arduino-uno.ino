@@ -44,9 +44,13 @@ int weightpercentage = 0;
 void sendData(void);
 void receiveData(int byteCount);
 
+// Builtin led for communication logging
+int inBuildLed = 13;
+
 void setup() {
   // Initialize the Scale
   Serial.begin(115200);
+  pinMode(inBuildLed, OUTPUT);
   scale.init();
   scale.reset();
 
@@ -70,7 +74,6 @@ void setup() {
 
 float startVolume = 0.0;
 bool tapping = false;
-
 void loop() {
   float volume = scale.getWeight();
   weightpercentage = scale.weightToPercentage(volume);
@@ -156,10 +159,19 @@ void loop() {
 }
 
 // Function answer requests from the I2C connection
+bool toggle = false;
 void sendData() {
   if (stateMachine.getState() == SM_IDLE_STATE) {
     Wire.write(weightpercentage + 100);
   } else Wire.write(stateMachine.getState());
+
+  bool toggle = false;
+  toggle = !toggle;
+  if(toggle) {
+    digitalWrite(inBuildLed, HIGH); // Turn the LED on
+  } else {
+    digitalWrite(inBuildLed, LOW);  // Turn the LED off;
+  }
 }
 
 // Function to receive state switches from the I2C connection
